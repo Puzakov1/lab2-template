@@ -1,6 +1,7 @@
 version: "3"
 services:
   postgres:
+    hostname: database
     image: library/postgres:13
     container_name: postgres
     restart: on-failure
