@@ -1,5 +1,8 @@
 import psycopg2
 
+from flask import Flask, request, jsonify, make_response
+
+app = Flask(__name__)
 
 DB_URL = "postgresql://program:test@database:5432/loyalties"
 
@@ -24,3 +27,8 @@ CREATE TABLE loyalty
                             f"VALUES (1, 'Test Max', 25, 'GOLD', 10);")
             conn.commit()
     return
+
+
+if __name__ == '__main__':
+    create_loyalty_db()
+    app.run(port=8050)

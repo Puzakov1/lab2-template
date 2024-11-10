@@ -1,5 +1,8 @@
 import psycopg2
 
+from flask import Flask, request, jsonify, make_response
+
+app = Flask(__name__)
 
 DB_URL = "postgresql://program:test@database:5432/reservations"
 
@@ -39,3 +42,8 @@ CREATE TABLE hotels
                             f"VALUES (1, '049161bb-badd-4fa8-9d90-87c9a82b0668', 'Ararat Park Hyatt Moscow', 'Россия', 'Москва', 'Неглинная ул., 4', 5, 10000);")
             conn.commit()
     return
+
+
+if __name__ == '__main__':
+    create_loyalty_db()
+    app.run(port=8070)
