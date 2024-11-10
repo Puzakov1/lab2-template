@@ -7,6 +7,10 @@ app = Flask(__name__)
 DB_URL = "postgresql://program:test@database:5432/reservations"
 
 
+@app.route('/manage/health', methods=['GET'])
+def health_check():
+    return 200
+
 
 def create_loyalty_db():
     with psycopg2.connect(DB_URL) as conn:

@@ -7,6 +7,10 @@ app = Flask(__name__)
 DB_URL = "postgresql://program:test@database:5432/payments"
 
 
+@app.route('/manage/health', methods=['GET'])
+def health_check():
+    return 200
+
 
 def create_payment_db():
     with psycopg2.connect(DB_URL) as conn:
