@@ -12,6 +12,74 @@ def health_check():
     return 200
 
 
+@app.route('/api/v1/loyalty/add/<user>', methods=['PATCH'])
+def get_loyalty(user:str):
+    create_loyalty_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select reservation_count from loyalty loy where loy.username = '{user}'
+""")
+            loyalty = cursor.fetchone()
+            if loyalty is None:
+                return {}, 404
+
+            reservation_count = loyalty[0]+1
+            if reservation_count < 10:
+                status = "BRONZE"
+                discount = 5
+            elif reservation_count< 20:
+                status = "SILVER"
+                discount = 7
+            else:
+                status = "GOLD"
+                discount = 10
+            cursor.execute(f"""
+update loyalty set discount = '{discount}', status='{status}', reservation_count={reservation_count} where username = '{user}'
+""")
+            conn.commit()
+    loyalty = {
+        "status":status,
+        "discount":discount,
+        "reservation_count":reservation_count
+    }
+    return loyalty, 200
+
+
+@app.route('/api/v1/loyalty/remove/<user>', methods=['PATCH'])
+def get_loyalty(user:str):
+    create_loyalty_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select reservation_count from loyalty loy where loy.username = '{user}'
+""")
+            loyalty = cursor.fetchone()
+            if loyalty is None:
+                return {}, 404
+
+            reservation_count = loyalty[0]-1
+            if reservation_count < 10:
+                status = "BRONZE"
+                discount = 5
+            elif reservation_count< 20:
+                status = "SILVER"
+                discount = 7
+            else:
+                status = "GOLD"
+                discount = 10
+            cursor.execute(f"""
+update loyalty set discount = '{discount}', status='{status}', reservation_count={reservation_count} where username = '{user}'
+""")
+            conn.commit()
+    loyalty = {
+        "status":status,
+        "discount":discount,
+        "reservation_count":reservation_count
+    }
+    return loyalty, 200
+
+
 @app.route('/api/v1/loyalty/<user>', methods=['POST'])
 def add_loyalty(user:str):
     create_loyalty_db()
