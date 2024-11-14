@@ -92,6 +92,8 @@ insert into loyalty (id, username, reservation_count, status, discount) values (
 """)
             conn.commit()
     return {
+        "id":max_id[0] + 1,
+        "username":user,
         "status":"BRONZE",
         "discount":5,
         "reservation_count":0
