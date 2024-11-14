@@ -12,9 +12,10 @@ def health_check():
     return 200
 
 
-@app.route('/api/v1/loyalty/add/<user>', methods=['PATCH'])
+@app.route('/api/v1/loyalty/add', methods=['PATCH'])
 def increase_loyalty(user:str):
     create_loyalty_db()
+    user = request.headers['X-User-Name']
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
@@ -46,9 +47,10 @@ update loyalty set discount = '{discount}', status='{status}', reservation_count
     return loyalty, 200
 
 
-@app.route('/api/v1/loyalty/remove/<user>', methods=['PATCH'])
+@app.route('/api/v1/loyalty/remove', methods=['PATCH'])
 def decrease_loyalty(user:str):
     create_loyalty_db()
+    user = request.headers['X-User-Name']
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
@@ -80,9 +82,10 @@ update loyalty set discount = '{discount}', status='{status}', reservation_count
     return loyalty, 200
 
 
-@app.route('/api/v1/loyalty/<user>', methods=['POST'])
+@app.route('/api/v1/loyalty', methods=['POST'])
 def add_loyalty(user:str):
     create_loyalty_db()
+    user = request.headers['X-User-Name']
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute("select max(id) from loyalty")
@@ -100,9 +103,10 @@ insert into loyalty (id, username, reservation_count, status, discount) values (
     }, 200
 
 
-@app.route('/api/v1/loyalty/<user>', methods=['GET'])
+@app.route('/api/v1/loyalty', methods=['GET'])
 def get_loyalty(user:str):
     create_loyalty_db()
+    user = request.headers['X-User-Name']
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
