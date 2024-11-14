@@ -13,7 +13,7 @@ def health_check():
 
 
 @app.route('/api/v1/loyalty/add/<user>', methods=['PATCH'])
-def get_loyalty(user:str):
+def increase_loyalty(user:str):
     create_loyalty_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
@@ -47,7 +47,7 @@ update loyalty set discount = '{discount}', status='{status}', reservation_count
 
 
 @app.route('/api/v1/loyalty/remove/<user>', methods=['PATCH'])
-def get_loyalty(user:str):
+def decrease_loyalty(user:str):
     create_loyalty_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
