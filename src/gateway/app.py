@@ -96,7 +96,7 @@ def post_reservations():
     ).days * hotel['price']
 
     response = requests.get('http://loyalty:8050/api/v1/loyalty', headers={'X-User-Name': user})
-
+    loyalty = response.json()
     discount = loyalty['discount']
 
     price_with_discount = int(price * (1 - discount / 100))
