@@ -24,8 +24,12 @@ def create_payment():
         with conn.cursor() as cursor:
             cursor.execute("select max(id) from payment")
             max_id = cursor.fetchone()
+            if max_id is None:
+                max_id = 0
+            else:
+                max_id = max_id[0]
             cursor.execute(f"""
-insert into payment (id, payment_uid, status, price) values ({max_id[0] + 1}, '{payment_uuid}', 'PAID', '{body["price"]}')
+insert into payment (id, payment_uid, status, price) values ({max_id + 1}, '{payment_uuid}', 'PAID', '{body["price"]}')
 """)
             conn.commit()
     return {

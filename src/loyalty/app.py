@@ -90,12 +90,16 @@ def add_loyalty(user:str):
         with conn.cursor() as cursor:
             cursor.execute("select max(id) from loyalty")
             max_id = cursor.fetchone()
+            if max_id is None:
+                max_id = 0
+            else:
+                max_id = max_id[0]
             cursor.execute(f"""
-insert into loyalty (id, username, reservation_count, status, discount) values ({max_id[0] + 1}, '{user}', 0, 'BRONZE', 5)
+insert into loyalty (id, username, reservation_count, status, discount) values ({max_id + 1}, '{user}', 0, 'BRONZE', 5)
 """)
             conn.commit()
     return {
-        "id":max_id[0] + 1,
+        "id":max_id + 1,
         "username":user,
         "status":"BRONZE",
         "discount":5,
