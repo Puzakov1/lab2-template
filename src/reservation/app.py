@@ -2,6 +2,10 @@ import psycopg2
 
 from flask import Flask, request, jsonify, make_response
 
+from datetime import datetime
+
+import uuid
+
 app = Flask(__name__)
 
 DB_URL = "postgresql://program:test@database:5432/reservations"
@@ -43,6 +47,108 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels
             }
         )
     return hotel_list, 200
+
+
+@app.route('/api/v1/reservations', methods=['POST'])
+def post_reservation():
+    create_reservation_db()
+    user = request.headers['X-User-Name']
+    reservation_uid = uuid.uuid4()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select id from hotels where hotel_uid = '{request.body['hotel_uid']}'
+""")
+            hotel_id = cursor.fetchone()[0]
+            cursor.execute("select max(id) from payment")
+            max_id = cursor.fetchone()
+            if max_id is None:
+                max_id= 0 
+            else:
+                max_id=max_id[0]
+            cursor.execute(f"""
+insert into reservation (id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data)
+values ({max_id+1}, '{reservation_uid}', '{user}', '{request.body["payment_uid"]}', '{hotel_id}', 'PAID', '{request.body["start_date"]}', '{request.body["end_date"]}')
+""")
+            conn.commit()
+
+    return {
+        "id":max_id+1,
+        "reservation_uid":reservation_uid,
+        "username":user,
+        "payment_uid":request.body["payment_uid"],
+        "hotel_id":hotel_id,
+        "status":"PAID",
+        "start_date":request.body["start_date"],
+        "end_data":request.body["end_date"]
+    }, 200
+
+
+
+@app.route('/api/v1/reservations', methods=['GET'])
+def get_reservations():
+    user = request.headers['X-User-Name']
+    create_reservation_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data from reservation
+where username = {user}
+""")
+            reservations = cursor.fetchall()
+    reservation_list=[]
+    for reservation in reservations:
+        reservation_list.append(
+            {
+                "id":reservation[0],
+                "reservation_uid":reservation[1],
+                "username":reservation[2],
+                "payment_uid":reservation[3],
+                "hotel_id":reservation[4],
+                "status":reservation[5],
+                "start_date":reservation[6],
+                "end_data":reservation[7]
+            }
+        )
+    return reservation_list, 200
+
+
+@app.route('/api/v1/reservations/<reservation_uuid>', methods=['GET'])
+def get_reservation(reservation_uuid:str):
+    user = request.headers['X-User-Name']
+    create_reservation_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data from reservation
+where username = '{user}' and reservation_uid = '{reservation_uuid}'
+""")
+            reservation = cursor.fetchone()
+    if reservation is None:
+        return {}, 404
+    reservation =  {
+        "id":reservation[0],
+        "reservation_uid":reservation[1],
+        "username":reservation[2],
+        "payment_uid":reservation[3],
+        "hotel_id":reservation[4],
+        "status":reservation[5],
+        "start_date":reservation[6],
+        "end_data":reservation[7]
+    }
+    return reservation, 200
+
+
+@app.route('/api/v1/reservations/<reservation_uuid>', methods=['PATCH'])
+def cancel_reservation(reservation_uuid:str):
+    create_reservation_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+update payment set status = 'CANCELED' where payment_uid = '{reservation_uuid}'
+""")
+            conn.commit()
+    return "CANCELED", 200
 
 
 def create_reservation_db():
