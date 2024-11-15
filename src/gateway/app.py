@@ -158,7 +158,7 @@ def post_reservations():
 @app.route('/api/v1/reservations/<reservationUid>', methods=['DELETE'])
 def delete_reservation(reservationUid: str):
     user = request.headers['X-User-Name']
-    response = requests.delete("http://reservation:8070/api/v1/reservations" + reservationUid)
+    response = requests.delete("http://reservation:8070/api/v1/reservations/" + reservationUid)
 
     reservation = response.json()
 
@@ -166,7 +166,8 @@ def delete_reservation(reservationUid: str):
 
     response = requests.patch(
         'http://loyalty:8050/api/v1/loyalty/remove',
-        timeout=5, headers={'X-User-Name': user})
+        headers={'X-User-Name': user}
+    )
 
     return {}, 204
 

@@ -183,16 +183,21 @@ where username = '{user}' and reservation_uid = '{reservation_uuid}'
     return reservation, 200
 
 
-@app.route('/api/v1/reservations/<reservation_uuid>', methods=['PATCH'])
+@app.route('/api/v1/reservations/<reservation_uuid>', methods=['DELETE'])
 def cancel_reservation(reservation_uuid:str):
     create_reservation_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
-update payment set status = 'CANCELED' where payment_uid = '{reservation_uuid}'
+update reservation set status = 'CANCELED' where reservation_uid = '{reservation_uuid}'
 """)
             conn.commit()
-    return "CANCELED", 200
+
+            cursor.execute(f"""
+SELECT payment_uid from reservation where reservation_uid = '{reservation_uuid}'
+                           """)
+            res = cursor.fetchone()
+    return {"paymentUid":res[0]}, 200
 
 
 def create_reservation_db():
