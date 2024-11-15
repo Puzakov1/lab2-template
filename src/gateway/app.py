@@ -44,7 +44,7 @@ def get_me():
 
 
 @app.route('/api/v1/reservations', methods=['GET'])
-def get_me():
+def get_reservations():
     user = request.headers['X-User-Name']
 
     response = requests.get("http://reservation:8070/api/v1/reservations", headers={'X-User-Name': user})
