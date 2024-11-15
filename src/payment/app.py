@@ -19,7 +19,7 @@ def health_check():
 def create_payment():
     create_payment_db()
     payment_uuid = uuid.uuid4()
-    body = json.loads(request.body)
+    body = request.json
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute("select max(id) from payment")

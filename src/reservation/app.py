@@ -96,11 +96,12 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels whe
 def post_reservation():
     create_reservation_db()
     user = request.headers['X-User-Name']
+    body = request.json
     reservation_uid = uuid.uuid4()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
-select id from hotels where hotel_uid = '{request.body['hotel_uid']}'
+select id from hotels where hotel_uid = '{body['hotel_uid']}'
 """)
             hotel_id = cursor.fetchone()[0]
             cursor.execute("select max(id) from payment")
@@ -111,7 +112,7 @@ select id from hotels where hotel_uid = '{request.body['hotel_uid']}'
                 max_id=max_id[0]
             cursor.execute(f"""
 insert into reservation (id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data)
-values ({max_id+1}, '{reservation_uid}', '{user}', '{request.body["payment_uid"]}', '{hotel_id}', 'PAID', '{request.body["start_date"]}', '{request.body["end_date"]}')
+values ({max_id+1}, '{reservation_uid}', '{user}', '{body["payment_uid"]}', '{hotel_id}', 'PAID', '{body["start_date"]}', '{body["end_date"]}')
 """)
             conn.commit()
 
@@ -119,11 +120,11 @@ values ({max_id+1}, '{reservation_uid}', '{user}', '{request.body["payment_uid"]
         "id":max_id+1,
         "reservation_uid":reservation_uid,
         "username":user,
-        "payment_uid":request.body["payment_uid"],
+        "payment_uid":body["payment_uid"],
         "hotel_id":hotel_id,
         "status":"PAID",
-        "start_date":request.body["start_date"],
-        "end_data":request.body["end_date"]
+        "start_date":body["start_date"],
+        "end_data":body["end_date"]
     }, 200
 
 

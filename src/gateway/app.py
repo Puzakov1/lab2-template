@@ -85,7 +85,7 @@ def get_reservation(reservationUid: str):
 @app.route('/api/v1/reservations', methods=['POST'])
 def post_reservations():
     user = request.headers['X-User-Name']
-    body = request.body
+    body = request.json
 
     response = requests.get('http://reservation:8070/api/v1/hotels_by_uuid/' + body['hotelUid'])
 
