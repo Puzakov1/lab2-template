@@ -72,8 +72,13 @@ def get_reservation(reservationUid: str):
     response = requests.get('http://reservation:8070/api/v1/hotels/' + str(reservation['hotel_id']))
 
     del reservation['hotel_id']
-    reservation['hotel'] = response.json()
-
+    
+    hotel = response.json()
+    hotel["fullAddress"] = f"{hotel['country']}, {hotel['city']}, {hotel['address']}"
+    del hotel['country']
+    del hotel['city']
+    del hotel['address']
+    reservation['hotel'] = hotel
     response = requests.get('http://payment:8060/api/v1/payment/' + reservation['paymentUid'])
 
     del reservation['paymentUid']
