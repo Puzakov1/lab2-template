@@ -147,11 +147,11 @@ where username = {user}
                 "id":reservation[0],
                 "reservation_uid":reservation[1],
                 "username":reservation[2],
-                "payment_uid":reservation[3],
+                "paymentUid":reservation[3],
                 "hotel_id":reservation[4],
                 "status":reservation[5],
-                "start_date":reservation[6],
-                "end_data":reservation[7]
+                "startDate":reservation[6],
+                "endDate":reservation[7]
             }
         )
     return reservation_list, 200
@@ -172,13 +172,13 @@ where username = '{user}' and reservation_uid = '{reservation_uuid}'
         return {}, 404
     reservation =  {
         "id":reservation[0],
-        "reservation_uid":reservation[1],
+        "reservationUid":reservation[1],
         "username":reservation[2],
-        "payment_uid":reservation[3],
+        "paymentUid":reservation[3],
         "hotel_id":reservation[4],
         "status":reservation[5],
-        "start_date":reservation[6],
-        "end_data":reservation[7]
+        "startDate":reservation[6],
+        "endDate":reservation[7]
     }
     return reservation, 200
 

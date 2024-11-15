@@ -65,11 +65,11 @@ def get_reservations():
 @app.route('/api/v1/reservations/<reservationUid>', methods=['GET'])
 def get_reservation(reservationUid: str):
     user = request.headers['X-User-Name']
-    response = requests.get("http://reservation:8070/api/v1/reservations" + reservationUid,headers={'X-User-Name': user})
+    response = requests.get("http://reservation:8070/api/v1/reservations/" + reservationUid, headers={'X-User-Name': user})
 
     reservation = response.json()
 
-    response = requests.get('http://reservation:8070/api/v1/hotels/' + reservation['hotel_id'])
+    response = requests.get('http://reservation:8070/api/v1/hotels/' + str(reservation['hotel_id']))
 
     del reservation['hotel_id']
     reservation['hotel'] = response.json()
