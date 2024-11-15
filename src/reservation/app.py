@@ -145,7 +145,7 @@ where username = '{user}'
         reservation_list.append(
             {
                 "id":reservation[0],
-                "reservation_uid":reservation[1],
+                "reservationUid":reservation[1],
                 "username":reservation[2],
                 "paymentUid":reservation[3],
                 "hotel_id":reservation[4],
