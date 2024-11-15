@@ -12,7 +12,7 @@ DB_URL = "postgresql://program:test@database:5432/payments"
 
 @app.route('/manage/health', methods=['GET'])
 def health_check():
-    return 200
+    return {}, 200
 
 
 @app.route('/api/v1/payment', methods=['POST'])

@@ -14,7 +14,7 @@ DB_URL = "postgresql://program:test@database:5432/reservations"
 
 @app.route('/manage/health', methods=['GET'])
 def health_check():
-    return 200
+    return {}, 200
 
 
 @app.route('/api/v1/hotels', methods=['GET'])

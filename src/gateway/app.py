@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/manage/health', methods=['GET'])
 def health_check():
-    return 200
+    return {}, 200
 
 
 @app.route('/api/v1/hotels', methods=['GET'])
