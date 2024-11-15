@@ -70,6 +70,27 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels whe
             }, 200
 
 
+@app.route('/api/v1/hotels_by_uuid/<hotel_id>', methods=['GET'])
+def get_hotel(hotel_id:str):
+    create_reservation_db()
+    with psycopg2.connect(DB_URL) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f"""
+select id, hotel_uid, name, country, city, address, stars, price from hotels where hotel_uid = '{hotel_id}'
+""")
+            hotel = cursor.fetchone()
+    return  {
+                "id":hotel[0],
+                "hotel_uid":hotel[1],
+                "name":hotel[2],
+                "country":hotel[3],
+                "city":hotel[4],
+                "address":hotel[5],
+                "stars":hotel[6],
+                "price":hotel[7]
+            }, 200
+
+
 @app.route('/api/v1/reservations', methods=['POST'])
 def post_reservation():
     create_reservation_db()
