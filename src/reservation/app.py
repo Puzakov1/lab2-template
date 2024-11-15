@@ -197,6 +197,18 @@ def create_reservation_db():
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
+CREATE TABLE if not exists hotels
+(
+    id        SERIAL PRIMARY KEY,
+    hotel_uid uuid         NOT NULL UNIQUE,
+    name      VARCHAR(255) NOT NULL,
+    country   VARCHAR(80)  NOT NULL,
+    city      VARCHAR(80)  NOT NULL,
+    address   VARCHAR(255) NOT NULL,
+    stars     INT,
+    price     INT          NOT NULL
+);
+
 CREATE TABLE if not exists reservation
 (
     id              SERIAL PRIMARY KEY,
@@ -210,17 +222,6 @@ CREATE TABLE if not exists reservation
     end_data        TIMESTAMP WITH TIME ZONE
 );
 
-CREATE TABLE if not exists hotels
-(
-    id        SERIAL PRIMARY KEY,
-    hotel_uid uuid         NOT NULL UNIQUE,
-    name      VARCHAR(255) NOT NULL,
-    country   VARCHAR(80)  NOT NULL,
-    city      VARCHAR(80)  NOT NULL,
-    address   VARCHAR(255) NOT NULL,
-    stars     INT,
-    price     INT          NOT NULL
-);
 """)
             conn.commit()
             cursor.execute(f"INSERT INTO hotels (id, hotel_uid, name, country, city, address, stars, price) "
