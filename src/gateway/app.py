@@ -24,7 +24,7 @@ def get_me():
 
     reservations = response.json()
     for res in reservations:
-        response = requests.get('http://reservation:8070/api/v1/hotels/' + res['hotel_id'])
+        response = requests.get('http://reservation:8070/api/v1/hotels/' + str(res['hotel_id']))
 
         res['hotel'] = response.json()
 
@@ -51,7 +51,7 @@ def get_reservations():
 
     reservations = response.json()
     for res in reservations:
-        response = requests.get('http://reservation:8070/api/v1/hotels/' + res['hotel_id'])
+        response = requests.get('http://reservation:8070/api/v1/hotels/' + str(res['hotel_id']))
 
         res['hotel'] = response.json()
 
