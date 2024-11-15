@@ -46,7 +46,8 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels
                 "price":hotel[7]
             }
         )
-    return hotel_list, 200
+    res = {"page": page, "pageSize": size, "totalElements": len(hotels), "items": hotel_list}
+    return res, 200
 
 
 @app.route('/api/v1/hotels/<hotel_id>', methods=['GET'])
