@@ -103,7 +103,7 @@ def post_reservations():
 
     response = requests.post(
         'http://payment:8060/api/v1/payment',
-        headers={'X-User-Name': user}, data={'price': price_with_discount})
+        headers={'X-User-Name': user, 'Content-Type': 'application/json'}, json={'price': price_with_discount},)
 
     payment = response.json()
 
@@ -114,9 +114,10 @@ def post_reservations():
     loyalty = response.json()
 
     response = requests.post(
-        "reservation:8070/api/v1/reservations",
-        headers={'X-User-Name': request.headers['X-User-Name']},
-        data={
+        "http://reservation:8070/api/v1/reservations",
+        headers={'X-User-Name': user,
+                 'Content-Type': 'application/json'},
+        json={
             'hotelUid': hotel['hotelUid'], 
             'startDate': body['startDate'],
             'endDate': body['endDate'],
@@ -139,7 +140,7 @@ def post_reservations():
 @app.route('/api/v1/reservations/<reservationUid>', methods=['DELETE'])
 def delete_reservation(reservationUid: str):
     user = request.headers['X-User-Name']
-    response = requests.delete("reservation:8070/api/v1/reservations" + reservationUid)
+    response = requests.delete("http://reservation:8070/api/v1/reservations" + reservationUid)
 
     reservation = response.json()
 

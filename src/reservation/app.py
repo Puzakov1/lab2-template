@@ -61,7 +61,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels whe
             hotel = cursor.fetchone()
     return  {
                 "id":hotel[0],
-                "hotel_uid":hotel[1],
+                "hotelUid":hotel[1],
                 "name":hotel[2],
                 "country":hotel[3],
                 "city":hotel[4],
@@ -82,7 +82,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels whe
             hotel = cursor.fetchone()
     return  {
                 "id":hotel[0],
-                "hotel_uid":hotel[1],
+                "hotelUid":hotel[1],
                 "name":hotel[2],
                 "country":hotel[3],
                 "city":hotel[4],
@@ -101,30 +101,30 @@ def post_reservation():
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
-select id from hotels where hotel_uid = '{body['hotel_uid']}'
+select id from hotels where hotel_uid = '{body['hotelUid']}'
 """)
             hotel_id = cursor.fetchone()[0]
-            cursor.execute("select max(id) from payment")
+            cursor.execute("select max(id) from reservation")
             max_id = cursor.fetchone()
-            if max_id is None:
-                max_id= 0 
-            else:
-                max_id=max_id[0]
+            try:
+                new_id = max_id[0]+1
+            except:
+                new_id = 1
             cursor.execute(f"""
 insert into reservation (id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data)
-values ({max_id+1}, '{reservation_uid}', '{user}', '{body["payment_uid"]}', '{hotel_id}', 'PAID', '{body["start_date"]}', '{body["end_date"]}')
+values ({new_id}, '{reservation_uid}', '{user}', '{body["paymentUid"]}', '{hotel_id}', 'PAID', '{body["startDate"]}', '{body["endDate"]}')
 """)
             conn.commit()
 
     return {
-        "id":max_id+1,
+        "id":new_id,
         "reservation_uid":reservation_uid,
         "username":user,
-        "payment_uid":body["payment_uid"],
+        "paymentUid":body["paymentUid"],
         "hotel_id":hotel_id,
         "status":"PAID",
-        "start_date":body["start_date"],
-        "end_data":body["end_date"]
+        "start_date":body["startDate"],
+        "end_data":body["endDate"]
     }, 200
 
 
