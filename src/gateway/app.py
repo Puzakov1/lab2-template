@@ -25,8 +25,14 @@ def get_me():
     reservations = response.json()
     for res in reservations:
         response = requests.get('http://reservation:8070/api/v1/hotels/' + str(res['hotel_id']))
-
-        res['hotel'] = response.json()
+        
+        hotel = response.json()
+        hotel["fullAddress"] = f"{hotel['country']}, {hotel['city']}, {hotel['address']}"
+        del hotel['country']
+        del hotel['city']
+        del hotel['address']
+        
+        res['hotel'] = hotel
 
         response = requests.get('http://payment:8060/api/v1/payment/' + res['paymentUid'])
 
@@ -52,8 +58,14 @@ def get_reservations():
     reservations = response.json()
     for res in reservations:
         response = requests.get('http://reservation:8070/api/v1/hotels/' + str(res['hotel_id']))
+        hotel = response.json()
 
-        res['hotel'] = response.json()
+        hotel["fullAddress"] = f"{hotel['country']}, {hotel['city']}, {hotel['address']}"
+        del hotel['country']
+        del hotel['city']
+        del hotel['address']
+
+        res['hotel'] = hotel
 
         response = requests.get('http://payment:8060/api/v1/payment/' + res['paymentUid'])
 
