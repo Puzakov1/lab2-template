@@ -136,7 +136,7 @@ def get_reservations():
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
-select id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data from reservation
+select id, reservation_uid, username, payment_uid, hotel_id, status, to_char(start_date, 'YYYY-MM-DD'), to_char(end_data, 'YYYY-MM-DD') from reservation
 where username = {user}
 """)
             reservations = cursor.fetchall()
@@ -164,7 +164,7 @@ def get_reservation(reservation_uuid:str):
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"""
-select id, reservation_uid, username, payment_uid, hotel_id, status, start_date, end_data from reservation
+select id, reservation_uid, username, payment_uid, hotel_id, status, to_char(start_date, 'YYYY-MM-DD'), to_char(end_data, 'YYYY-MM-DD') from reservation
 where username = '{user}' and reservation_uid = '{reservation_uuid}'
 """)
             reservation = cursor.fetchone()
