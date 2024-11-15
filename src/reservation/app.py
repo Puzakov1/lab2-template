@@ -19,8 +19,8 @@ def health_check():
 
 @app.route('/api/v1/hotels', methods=['GET'])
 def get_hotels():
-    page = request.args["page"]
-    size = request.args["size"]
+    page = int(request.args["page"])
+    size = int(request.args["size"])
     create_reservation_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
