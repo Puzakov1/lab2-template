@@ -108,7 +108,7 @@ insert into loyalty (id, username, reservation_count, status, discount) values (
 
 
 @app.route('/api/v1/loyalty', methods=['GET'])
-def get_loyalty(user:str):
+def get_loyalty():
     create_loyalty_db()
     user = request.headers['X-User-Name']
     with psycopg2.connect(DB_URL) as conn:
