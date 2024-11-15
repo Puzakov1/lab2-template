@@ -137,7 +137,7 @@ def get_reservations():
         with conn.cursor() as cursor:
             cursor.execute(f"""
 select id, reservation_uid, username, payment_uid, hotel_id, status, to_char(start_date, 'YYYY-MM-DD'), to_char(end_data, 'YYYY-MM-DD') from reservation
-where username = {user}
+where username = '{user}'
 """)
             reservations = cursor.fetchall()
     reservation_list=[]
