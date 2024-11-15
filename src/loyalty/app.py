@@ -122,7 +122,7 @@ select status, discount, reservation_count from loyalty loy where loy.username =
     loyalty = {
         "status":loyalty[0],
         "discount":loyalty[1],
-        "reservation_count":loyalty[2]
+        "reservationCount":loyalty[2]
     }
     return loyalty, 200
 

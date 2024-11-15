@@ -37,7 +37,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels
         hotel_list.append(
             {
                 "id":hotel[0],
-                "hotel_uid":hotel[1],
+                "hotelUid":hotel[1],
                 "name":hotel[2],
                 "country":hotel[3],
                 "city":hotel[4],
@@ -46,7 +46,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels
                 "price":hotel[7]
             }
         )
-    res = {"page": page, "pageSize": size, "totalElements": len(hotels), "items": hotel_list}
+    res = {"page": page, "pageSize": len(hotel_list), "totalElements": len(hotels), "items": hotel_list}
     return res, 200
 
 
