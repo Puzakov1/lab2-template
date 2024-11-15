@@ -50,7 +50,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels
 
 
 @app.route('/api/v1/hotels/<hotel_id>', methods=['GET'])
-def get_hotel(hotel_id:int):
+def get_hotel_by_id(hotel_id:int):
     create_reservation_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
@@ -71,7 +71,7 @@ select id, hotel_uid, name, country, city, address, stars, price from hotels whe
 
 
 @app.route('/api/v1/hotels_by_uuid/<hotel_id>', methods=['GET'])
-def get_hotel(hotel_id:str):
+def get_hotel_by_uuid(hotel_id:str):
     create_reservation_db()
     with psycopg2.connect(DB_URL) as conn:
         with conn.cursor() as cursor:
