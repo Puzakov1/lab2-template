@@ -118,13 +118,13 @@ values ({new_id}, '{reservation_uid}', '{user}', '{body["paymentUid"]}', '{hotel
 
     return {
         "id":new_id,
-        "reservation_uid":reservation_uid,
+        "reservationUid":reservation_uid,
         "username":user,
         "paymentUid":body["paymentUid"],
         "hotel_id":hotel_id,
         "status":"PAID",
-        "start_date":body["startDate"],
-        "end_data":body["endDate"]
+        "startDate":body["startDate"],
+        "endDate":body["endDate"]
     }, 200
 
 

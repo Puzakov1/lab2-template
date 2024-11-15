@@ -132,6 +132,7 @@ def post_reservations():
     reservation['discount'] = discount
     del reservation['paymentUid']
     del payment['paymentUid']
+    del payment['id']
     reservation['payment'] = payment
 
     return reservation, 200
